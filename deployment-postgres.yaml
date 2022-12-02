@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: postgres
+  name: postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: postgres
+    spec:
+      containers:
+      - image: postgres
+        name: postgres
+        resources: {}
+        env:
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: secret-postgres
+                key: password
+        volumeMounts:
+          - name: postgres-etc
+            mountPath: "/etc/postgresql"
+          - name: postgres-init
+            mountPath: "/docker-entrypoint-initdb.d"
+          - name: pvc-postgres
+            mountPath: "/var/lib/postgresql"
+      volumes:
+      - name: secret-postgres
+        secret:
+          secretName: secret-postgres
+      - name: postgres-etc
+        configMap:
+          name: configmap-postgres-etc
+      - name: postgres-init
+        configMap:
+          name: configmap-postgres-init
+      - name: pvc-postgres
+        persistentVolumeClaim:
+          claimName: postgres-data
+status: {}

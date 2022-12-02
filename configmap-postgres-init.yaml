@@ -1,0 +1,12 @@
+apiVersion: v1
+data:
+  init-db.sh: "#!/bin/bash\nset -e\n\npsql -v ON_ERROR_STOP=1 --username \"$POSTGRES_USER\"
+    --dbname \"$POSTGRES_DB\" <<-EOSQL\n\tCREATE USER docker;\n\tCREATE DATABASE docker;\n\tGRANT
+    ALL PRIVILEGES ON DATABASE docker TO docker;\n        \\c docker;\n\tCREATE TABLE
+    test(\n\t\tid SERIAL PRIMARY KEY,\n                country TEXT NOT NULL,\n
+    \               capital TEXT NOT NULL\n\t);\n        INSERT INTO test(country,capital)
+    VALUES('france','paris');\nEOSQL\n"
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: configmap-postgres-init

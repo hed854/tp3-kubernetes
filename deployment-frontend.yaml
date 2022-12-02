@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: frontend
+  name: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - image: lx-8-9:5000/frontend:latest
+        name: frontend
+        imagePullPolicy: Always
+        resources: {}
+        env:
+          - name: DB_USER
+            value: "postgres"
+          - name: DB_PASSWORD
+            value: "titi"
+          - name: DB_NAME
+            value: "docker"
+          - name: DB_HOST
+            value: "svc-postgres"
+          - name: DB_PORT
+            value: "5432"
+          - name: APP_PORT
+            value: "8000"
+status: {}
